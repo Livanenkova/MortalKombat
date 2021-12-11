@@ -1,4 +1,4 @@
-console.log('Тест');
+const $arenas = document.querySelector('.arenas');
 
 const  player1 = {
   name: 'Scorpion',
@@ -20,14 +20,11 @@ const  player2 = {
   }
 }
 
-console.log(player1.attack());
-console.log(player2.attack());
-
 const createPlayer = function (player,playerObject) {
   const $player1 = document.createElement('div');
   $player1.classList.add(player);
 
-  const $arenas = document.querySelector('.arenas');
+  
   $arenas.appendChild($player1)
   
   const $progressbar = document.createElement('div');
@@ -41,7 +38,7 @@ const createPlayer = function (player,playerObject) {
   const $life = document.createElement('div');
   $life.classList.add('life');
   $progressbar.appendChild($life);
-  $life.style.width = String(playerObject.hp + '%')
+  $life.style.width = playerObject.hp + '%';
 
   const $name = document.createElement('div');
   $name.classList.add('name');
