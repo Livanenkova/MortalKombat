@@ -69,16 +69,16 @@ const createPlayer = function (playerObject) {
 //   }
 // };
 
-function changeHP (player) {
-  const $playerLife = document.querySelector('.player' + player.player + ' .life');
-  player.hp -= createRandomNumber();
-  $playerLife.style.width = player.hp + '%';
-  if (player.hp <= 0) {
-    player.hp = 0;
-    $arenas.appendChild(playerWin(player.name));
-    $randomButton.disabled = true;
-  }
-};
+// function changeHP (player) {
+//   const $playerLife = document.querySelector('.player' + player.player + ' .life');
+//   player.hp -= createRandomNumber();
+//   $playerLife.style.width = player.hp + '%';
+//   if (player.hp <= 0) {
+//     player.hp = 0;
+//     $arenas.appendChild(playerWin(player.name));
+//     $randomButton.disabled = true;
+//   }
+// };
 
 function changeHP (player) {
   const $playerLife = document.querySelector('.player' + player.player + ' .life');
