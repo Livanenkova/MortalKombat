@@ -1,6 +1,8 @@
-console.log('Тест');
+const $arenas = document.querySelector('.arenas');
+const $randomButton = document.querySelector('.button');
 
 const  player1 = {
+  player: 1,
   name: 'Scorpion',
   hp: 100,
   img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
@@ -11,6 +13,7 @@ const  player1 = {
 }
 
 const  player2 = {
+  player: 2,
   name: 'SubZero',
   hp: 100,
   img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
@@ -20,42 +23,100 @@ const  player2 = {
   }
 }
 
-console.log(player1.attack());
-console.log(player2.attack());
+function createRandomNumber() {
+  let humber = Math.ceil(Math.random() * 20);
+  return humber;
+};
 
-const createPlayer = function (player,playerObject) {
-  const $player1 = document.createElement('div');
-  $player1.classList.add(player);
+function createElement (tag, className) {
+  const $tag = document.createElement(tag);
+  if (className){
+    $tag.classList.add(className);
+  }
 
-  const $arenas = document.querySelector('.arenas');
-  $arenas.appendChild($player1)
-  
-  const $progressbar = document.createElement('div');
-  $progressbar.classList.add('progressbar');
-  $player1.appendChild($progressbar);
+  return $tag;
+};
 
-  const $character = document.createElement('div');
-  $character.classList.add('character');
-  $player1.appendChild($character);
+const createPlayer = function (playerObject) {
+  const $player = createElement('div','player' + playerObject.player);
+  const $progressbar = createElement('div','progressbar');
+  const $character = createElement('div','character');
+  const $life = createElement('div','life');
+  const $name = createElement('div','name');
+  const $img = createElement('img');
 
-  const $life = document.createElement('div');
-  $life.classList.add('life');
-  $progressbar.appendChild($life);
-  $life.style.width = String(playerObject.hp + '%')
-
-  const $name = document.createElement('div');
-  $name.classList.add('name');
-  $progressbar.appendChild($name);
-  $name.innerText = playerObject.name;
-
-  const $img = document.createElement('img');
   $img.classList.add('img');
+  
+  $player.appendChild($progressbar);
+  $player.appendChild($character);
+  $progressbar.appendChild($life);
+  $progressbar.appendChild($name);
   $character.appendChild($img);
+
+  $life.style.width = playerObject.hp + '%';
+  $name.innerText = playerObject.name;
   $img.src=playerObject.img;
+  return $player
+};
 
-}
+// function changeHP (player) {
+//   const $playerLife = document.querySelector('.player' + player.player + ' .life');
+//   player.hp -= createRandomNumber();
+//   $playerLife.style.width = player.hp + '%';
+//   if (player.hp <= 0) {
+//     player.hp = 0;
+//     $arenas.appendChild(playerLose(player.name));
+//   }
+// };
+
+// function changeHP (player) {
+//   const $playerLife = document.querySelector('.player' + player.player + ' .life');
+//   player.hp -= createRandomNumber();
+//   $playerLife.style.width = player.hp + '%';
+//   if (player.hp <= 0) {
+//     player.hp = 0;
+//     $arenas.appendChild(playerWin(player.name));
+//     $randomButton.disabled = true;
+//   }
+// };
+
+function changeHP (player) {
+  const $playerLife = document.querySelector('.player' + player.player + ' .life');
+  player.hp -= createRandomNumber();
+  $playerLife.style.width = player.hp + '%';
+  if (player1.hp <= 0) {
+    player.hp = 0;
+    $arenas.appendChild(playerWin(player2.name));
+    $randomButton.disabled = true;
+  } else if (player2.hp <= 0) {
+    player.hp = 0;
+    $arenas.appendChild(playerWin(player1.name));
+    $randomButton.disabled = true;
+  }
+  
+};
+
+// function playerLose(name){
+//   const $loseTitle = createElement('div','loseTitle');
+//   $loseTitle.innerText = name + ' lose';
+//   return $loseTitle;
+// };
+
+function playerWin(name){
+  const $winTitle = createElement('div','winTitle');
+  $winTitle.innerText = name + ' win';
+  return $winTitle;
+};
+
+console.log(createRandomNumber());
 
 
-createPlayer('player1', player1);
-createPlayer('player2', player2);
+
+$randomButton.addEventListener('click',function(){
+  console.log(player1.hp);
+  changeHP(player1);
+  changeHP(player2);
+})
+$arenas.appendChild(createPlayer(player1));
+$arenas.appendChild(createPlayer(player2));
 
