@@ -23,9 +23,8 @@ const  player2 = {
   }
 }
 
-function createRandomNumber() {
-  let humber = Math.ceil(Math.random() * 20);
-  return humber;
+function createRandomNumber(number) { 
+  return Math.ceil(Math.random() * number);
 };
 
 function createElement (tag, className) {
@@ -33,7 +32,6 @@ function createElement (tag, className) {
   if (className){
     $tag.classList.add(className);
   }
-
   return $tag;
 };
 
@@ -59,64 +57,41 @@ const createPlayer = function (playerObject) {
   return $player
 };
 
-// function changeHP (player) {
-//   const $playerLife = document.querySelector('.player' + player.player + ' .life');
-//   player.hp -= createRandomNumber();
-//   $playerLife.style.width = player.hp + '%';
-//   if (player.hp <= 0) {
-//     player.hp = 0;
-//     $arenas.appendChild(playerLose(player.name));
-//   }
-// };
-
-// function changeHP (player) {
-//   const $playerLife = document.querySelector('.player' + player.player + ' .life');
-//   player.hp -= createRandomNumber();
-//   $playerLife.style.width = player.hp + '%';
-//   if (player.hp <= 0) {
-//     player.hp = 0;
-//     $arenas.appendChild(playerWin(player.name));
-//     $randomButton.disabled = true;
-//   }
-// };
 
 function changeHP (player) {
   const $playerLife = document.querySelector('.player' + player.player + ' .life');
-  player.hp -= createRandomNumber();
+  player.hp -= createRandomNumber(20);
   $playerLife.style.width = player.hp + '%';
-  if (player1.hp <= 0) {
+  if (player.hp <= 0) {
     player.hp = 0;
-    $arenas.appendChild(playerWin(player2.name));
-    $randomButton.disabled = true;
-  } else if (player2.hp <= 0) {
-    player.hp = 0;
-    $arenas.appendChild(playerWin(player1.name));
-    $randomButton.disabled = true;
-  }
-  
+}
 };
-
-// function playerLose(name){
-//   const $loseTitle = createElement('div','loseTitle');
-//   $loseTitle.innerText = name + ' lose';
-//   return $loseTitle;
-// };
 
 function playerWin(name){
   const $winTitle = createElement('div','winTitle');
+  if (name) {
   $winTitle.innerText = name + ' win';
+  } else {
+    $winTitle.innerText ='draw';
+  }
   return $winTitle;
 };
 
-console.log(createRandomNumber());
-
-
-
 $randomButton.addEventListener('click',function(){
-  console.log(player1.hp);
   changeHP(player1);
   changeHP(player2);
-})
+if (player1.hp === 0 || player2.hp === 0){
+  $randomButton.disabled = true;
+}
+
+if (player1.hp === 0 && player1.hp < player2.hp) {
+  $arenas.appendChild(playerWin(player2.name));
+} else if (player2.hp === 0 && player2.hp < player1.hp) {
+  $arenas.appendChild(playerWin(player1.name));
+} else if ( player1.hp === 0 && player2.hp === 0) {
+  $arenas.appendChild(playerWin());
+}
+});
+
 $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));
-
