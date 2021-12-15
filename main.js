@@ -1,10 +1,19 @@
 const $arenas = document.querySelector('.arenas');
-const $randomButton = document.querySelector('.button');
+// const $randomButton = document.querySelector('.button');
 const $reloadWrap = createElement('div','reloadWrap');
 
 function createRandomNumber(number) { 
   return Math.ceil(Math.random() * number);
 };
+
+const $formFigth = document.querySelector('.control')
+
+const HIT = {
+  head: 30,
+  body: 25,
+  foot: 20,
+}
+const ATTACK = ['head', 'body', 'foot'];
 
 const  player1 = {
   player: 1,
@@ -89,7 +98,7 @@ const createPlayer = function(player) {
 // };
 
 function showResult(name){
-  const $winTitle = createElement('div','winTitle');
+  const $winTitle = createElement('div','loseTitle');
   if (name) {
     $winTitle.innerText = name + ' wins';
   } else {
@@ -111,27 +120,60 @@ function createReloadButton() {
   return $reloadWrap
 }
 
-$randomButton.addEventListener('click',function(){
-  $reloadWrap.disabled = true;
-  player1.changeHP(createRandomNumber(20));
-  player2.changeHP(createRandomNumber(20));
-  player1.renderHP();
-  player2.renderHP();
-if (player1.hp === 0 || player2.hp === 0){
-  $randomButton.disabled = true;
-  const $reloadButton = createReloadButton();
-  $arenas.appendChild($reloadButton);
-}
-if (player1.hp === 0 && player1.hp < player2.hp) {
-  $arenas.appendChild(showResult(player2.name));
-} else if (player2.hp === 0 && player2.hp < player1.hp) {
-  $arenas.appendChild(showResult(player1.name));
-} else if ( player1.hp === 0 && player2.hp === 0) {
-  $arenas.appendChild(showResult());
-}
-
-}
-);
+// $randomButton.addEventListener('click',function(){
+//   $reloadWrap.disabled = true;
+//   player1.changeHP(createRandomNumber(20));
+//   player2.changeHP(createRandomNumber(20));
+//   player1.renderHP();
+//   player2.renderHP();
+// if (player1.hp === 0 || player2.hp === 0){
+//   $randomButton.disabled = true;
+//   const $reloadButton = createReloadButton();
+//   $arenas.appendChild($reloadButton);
+// }
+// if (player1.hp === 0 && player1.hp < player2.hp) {
+//   $arenas.appendChild(showResult(player2.name));
+// } else if (player2.hp === 0 && player2.hp < player1.hp) {
+//   $arenas.appendChild(showResult(player1.name));
+// } else if ( player1.hp === 0 && player2.hp === 0) {
+//   $arenas.appendChild(showResult());
+// }
+// }
+// );
 
 $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));
+
+function enemyAttack () {
+  const hit = ATTACK[createRandomNumber(3)-1];
+  const defence = ATTACK[createRandomNumber(3)-1];
+  return {
+    value: createRandomNumber(HIT[hit]),
+    hit,
+    defence,
+  }
+}
+
+$formFigth.addEventListener('submit',function(e){
+  e.preventDefault()
+  console.dir($formFigth);
+  const enemy = enemyAttack();
+
+  const attack = {};
+
+  for (let item of $formFigth){
+    if (item.checked && item.name === "hit") {
+      attack.value = createRandomNumber(HIT[item.value]);
+      attack.hit = item.value;
+    }
+
+    if (item.checked && item.name === "defence") {
+      attack.defence = item.value;
+    }
+
+    item.checked = false;
+  }
+
+  console.log('####, a', attack);
+  console.log('####, e', enemy);
+});
