@@ -262,18 +262,6 @@ body {
     top: 1px;
 }
 
-.loseTitle {
-    position: absolute;
-    top: 25%;
-    left: 50%;
-    font-size: 36px;
-    transform: translate(-50%, 0%);
-    text-transform: uppercase;
-    z-index: 1000;
-    color: white;
-    font-family: "Mortal Kombat 3";
-}
-
 .winTitle {
   position: absolute;
   top: 25%;

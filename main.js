@@ -88,12 +88,12 @@ const createPlayer = function(player) {
 //   }
 // };
 
-function playerWin(name){
+function showResult(name){
   const $winTitle = createElement('div','winTitle');
   if (name) {
-    $winTitle.innerText = name + ' win';
+    $winTitle.innerText = name + ' wins';
   } else {
-    $winTitle.innerText ='draw';
+    $winTitle.innerText ='Draw';
   }
   return $winTitle;
 };
@@ -104,11 +104,12 @@ function createReloadButton() {
   const $reloadButton = createElement('button','button');
   $reloadButton.innerText ='Restart';
   $reloadWrap.appendChild($reloadButton);
-
+  
+  $reloadButton.addEventListener('click',function(){
+    window.location.reload();
+  });
   return $reloadWrap
 }
-
-
 
 $randomButton.addEventListener('click',function(){
   $reloadWrap.disabled = true;
@@ -120,16 +121,13 @@ if (player1.hp === 0 || player2.hp === 0){
   $randomButton.disabled = true;
   const $reloadButton = createReloadButton();
   $arenas.appendChild($reloadButton);
-  $reloadButton.addEventListener('click',function(){
-    window.location.reload();
-  });
 }
 if (player1.hp === 0 && player1.hp < player2.hp) {
-  $arenas.appendChild(playerWin(player2.name));
+  $arenas.appendChild(showResult(player2.name));
 } else if (player2.hp === 0 && player2.hp < player1.hp) {
-  $arenas.appendChild(playerWin(player1.name));
+  $arenas.appendChild(showResult(player1.name));
 } else if ( player1.hp === 0 && player2.hp === 0) {
-  $arenas.appendChild(playerWin());
+  $arenas.appendChild(showResult());
 }
 
 }
