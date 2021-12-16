@@ -172,8 +172,6 @@ $formFigth.addEventListener('submit',function(e){
       }
     }
 
-    
-
     if (player1.hp === 0 || player2.hp === 0){
       $randomButton.disabled = true;
       const $reloadButton = createReloadButton();
