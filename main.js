@@ -200,13 +200,6 @@ function showResult() {
   }
 };
 
-// function generateLogs (type, player1, player2) {
-//   console.log(logs[type].length-1)
-  // const text = logs[type][createRandomNumber(logs[type].length-1)].replace('[playerKick]',player1.name).replace('[playerDefence]',player2.name);
-  // const el = `<p>${text}</p>`
-  // $chat.insertAdjacentHTML('afterbegin', el)
-// }
-
 function generateLogs (type, player1, player2, impairment) {
   console.log(player1)
   console.log(player1)
