@@ -1,10 +1,19 @@
 const $arenas = document.querySelector('.arenas');
 const $randomButton = document.querySelector('.button');
-const $reloadWrap = document.querySelector('.button');
+const $reloadWrap = createElement('div','reloadWrap');
 
 function createRandomNumber(number) { 
   return Math.ceil(Math.random() * number);
 };
+
+const $formFigth = document.querySelector('.control')
+
+const HIT = {
+  head: 30,
+  body: 25,
+  foot: 20,
+}
+const ATTACK = ['head', 'body', 'foot'];
 
 const  player1 = {
   player: 1,
@@ -12,16 +21,11 @@ const  player1 = {
   hp: 100,
   img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
   weapon: ['узи','морковка','лимонка','м 16'],
-  attack: function () {
-    return console.log(this.name + ' Fight...')
-  },
-  changeHP:changeHP,
-  elHP: elHP,
-  renderHP: renderHP,
+  attack,
+  changeHP,
+  elHP,
+  renderHP,
 }
-
-console.log(player1)
-console.log(player1.attack())
 
 const  player2 = {
   player: 2,
@@ -29,17 +33,28 @@ const  player2 = {
   hp: 100,
   img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
   weapon: ['калашников','морковка','дымовуха','м 16'],
-  attack: function () {
-    console.log(this.name + ' Fight...')
-  },
-  changeHP:changeHP,
-  elHP: elHP,
-  renderHP: renderHP,
+  attack,
+  changeHP,
+  elHP,
+  renderHP,
 }
 
-console.log(player2.attack())
+function elHP() {
+  return document.querySelector('.player' + this.player + ' .life');
+}
 
-function createElement (tag, className) {
+function renderHP($playerLife) {
+  return this.elHP().style.width = this.hp + '%';
+}
+
+function changeHP(damage) {
+  this.hp -= damage;
+  if (this.hp < 0) {
+    this.hp = 0;
+  }
+};
+
+function createElement(tag, className) {
   const $tag = document.createElement(tag);
   if (className){
     $tag.classList.add(className);
@@ -47,8 +62,12 @@ function createElement (tag, className) {
   return $tag;
 };
 
-const createPlayer = function (playerObject) {
-  const $player = createElement('div','player' + playerObject.player);
+function attack() {
+  return console.log(this.name + ' Fight...')
+}
+
+const createPlayer = function(player) {
+  const $player = createElement('div','player' + player.player);
   const $progressbar = createElement('div','progressbar');
   const $character = createElement('div','character');
   const $life = createElement('div','life');
@@ -63,13 +82,13 @@ const createPlayer = function (playerObject) {
   $progressbar.appendChild($name);
   $character.appendChild($img);
 
-  $life.style.width = playerObject.hp + '%';
-  $name.innerText = playerObject.name;
-  $img.src=playerObject.img;
+  $life.style.width = player.hp + '%';
+  $name.innerText = player.name;
+  $img.src = player.img;
   return $player
 };
 
-// function changeHP (player,number) {
+// function changeHP(player,number) {
 //   const $playerLife = document.querySelector('.player' + player.player + ' .life');
 //   player.hp -= number;
 //   $playerLife.style.width = player.hp + '%';
@@ -78,64 +97,102 @@ const createPlayer = function (playerObject) {
 //   }
 // };
 
-
-function changeHP (number) {
-  this.hp -= number;
-  if (this.hp <= 0) {
-    this.hp = 0;
-  }
-  this.elHP();
-};
-
-function elHP () {
-  const $playerLife = document.querySelector('.player' + this.player + ' .life');
-  this.renderHP ($playerLife);
-  return $playerLife;
-}
-
-function renderHP ($playerLife) {
-  // Третья функци renderHP должна только рендерить hp, т.е. рисовать hp при помощи style.width.
-  $playerLife.style.width = this.hp + '%';
-}
-
-function playerWin(name){
-  const $winTitle = createElement('div','winTitle');
+function showResult(name){
+  const $winTitle = createElement('div','loseTitle');
   if (name) {
-    $winTitle.innerText = name + ' win';
+    $winTitle.innerText = name + ' wins';
   } else {
-    $winTitle.innerText ='draw';
+    $winTitle.innerText ='Draw';
   }
   return $winTitle;
 };
 
 function createReloadButton() {
+  
   const $reloadWrap = createElement('div','reloadWrap');
-  const $button = createElement('button','button');
-  $reloadWrap.appendChild($button);
-  $button.innerText ='Restart';
+  const $reloadButton = createElement('button','button');
+  $reloadButton.innerText ='Restart';
+  $reloadWrap.appendChild($reloadButton);
+  
+  $reloadButton.addEventListener('click',function(){
+    window.location.reload();
+  });
+  return $reloadWrap
 }
 
-$reloadWrap.addEventListener('click',function(){
-  window.location.reload();
-  if (player1.hp === 0 || player1.hp === 0) {
-    createReloadButton();
-  }
-});
 
-$randomButton.addEventListener('click',function(){
-  player1.changeHP(createRandomNumber(20));
-  player2.changeHP(createRandomNumber(20))
-if (player1.hp === 0 || player2.hp === 0){
-  $randomButton.disabled = true;
-}
-if (player1.hp === 0 && player1.hp < player2.hp) {
-  $arenas.appendChild(playerWin(player2.name));
-} else if (player2.hp === 0 && player2.hp < player1.hp) {
-  $arenas.appendChild(playerWin(player1.name));
-} else if ( player1.hp === 0 && player2.hp === 0) {
-  $arenas.appendChild(playerWin());
-}
-}
-);
+
 $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));
+
+function enemyAttack () {
+  const hit = ATTACK[createRandomNumber(3)-1];
+  console.log(hit)
+  const defence = ATTACK[createRandomNumber(3)-1];
+  console.log(defence)
+  return {
+    value: createRandomNumber(HIT[hit]),
+    hit,
+    defence,
+  }
+}
+
+$formFigth.addEventListener('submit',function(e){
+  e.preventDefault()
+  $reloadWrap.disabled = true;
+  console.dir($formFigth);
+  const enemy = enemyAttack();
+  const attack = {};
+
+
+
+  for (let item of $formFigth){
+    if (item.checked && item.name === "hit") {
+      attack.value = createRandomNumber(HIT[item.value]);
+      attack.hit = item.value;
+
+
+    }
+
+    if (item.checked && item.name === "defence") {
+      attack.defence = item.value;
+      console.log(attack.defence)
+      if (attack.hit === enemy.defence || attack.defence === enemy.hit) {
+        $arenas.appendChild(showResult());
+      }  
+      else if (attack.hit !== enemy.defence || attack.defence !== enemy.hit) {
+        player1.changeHP(attack.value);
+        console.log(attack.value)
+        player1.renderHP();
+        player2.changeHP(enemy.value);
+        console.log(enemy.value)
+        player2.renderHP();
+        console.log(player1.hp)
+        console.log(player2.hp)
+      }
+    }
+
+    if (player1.hp === 0 || player2.hp === 0){
+      $randomButton.disabled = true;
+      const $reloadButton = createReloadButton();
+      $arenas.appendChild($reloadButton);
+    }  
+
+    if (player1.hp === 0 && player1.hp < player2.hp) {
+      $arenas.appendChild(showResult(player2.name));
+    } else if (player2.hp === 0 && player2.hp < player1.hp) {
+      $arenas.appendChild(showResult(player1.name));
+    } else if ( player1.hp === 0 && player2.hp === 0) {
+      $arenas.appendChild(showResult());
+    }
+    item.checked = false;
+
+    
+  }
+  
+
+
+  console.log('####, a', attack);
+  console.log('####, e', enemy);
+});
+
