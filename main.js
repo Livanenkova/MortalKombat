@@ -90,7 +90,7 @@ const createPlayer = function(player) {
   return $player
 };
 
-function showResult(name){
+function playerLose(name){
   const $winTitle = createElement('div','loseTitle');
   if (name) {
     $winTitle.innerText = name + ' wins';
@@ -127,7 +127,7 @@ function enemyAttack () {
 }
 
 
-function myAttack () {
+function PlayerAttack() {
   const attack = {};
   for (let item of $formFigth){
     if (item.checked && item.name === "hit") {
@@ -138,22 +138,36 @@ function myAttack () {
 
     if (item.checked && item.name === "defence") {
       attack.defence = item.value;
-      console.log(attack.defence)
-    item.checked = false;
+      item.checked = false;
+    }
   }
-}
 return attack;
 }
+
+function showResult() {
+  if (player1.hp === 0 || player2.hp === 0){
+    $randomButton.disabled = true;
+    const $reloadButton = createReloadButton();
+    $arenas.appendChild($reloadButton);
+    }  
+    if (player1.hp === 0 && player1.hp < player2.hp) {
+    $arenas.appendChild(playerLose(player2.name));
+    } else if (player2.hp === 0 && player2.hp < player1.hp) {
+    $arenas.appendChild(playerLose(player1.name));
+    } else if ( player1.hp === 0 && player2.hp === 0) {
+    $arenas.appendChild(playerLose());
+  }
+};
 
 $formFigth.addEventListener('submit',function(e){
   e.preventDefault()
   $reloadWrap.disabled = true;
   console.dir($formFigth);
   const enemy = enemyAttack();
-  const attack = myAttack();
+  const attack = PlayerAttack();
   
   if (attack.hit === enemy.defence || attack.defence === enemy.hit) {
-    $arenas.appendChild(showResult());
+    $arenas.appendChild(playerLose());
   }  
   else if (attack.hit !== enemy.defence || attack.defence !== enemy.hit) {
     player1.changeHP(attack.value);
@@ -161,20 +175,5 @@ $formFigth.addEventListener('submit',function(e){
     player2.changeHP(enemy.value);
     player2.renderHP();
   }
-  
-  if (player1.hp === 0 || player2.hp === 0){
-  $randomButton.disabled = true;
-  const $reloadButton = createReloadButton();
-  $arenas.appendChild($reloadButton);
-  }  
-  else if (player1.hp === 0 && player1.hp < player2.hp) {
-  $arenas.appendChild(showResult(player2.name));
-  } else if (player2.hp === 0 && player2.hp < player1.hp) {
-  $arenas.appendChild(showResult(player1.name));
-  } else if ( player1.hp === 0 && player2.hp === 0) {
-  $arenas.appendChild(showResult());
-  }
-
-  console.log('####, a', attack);
-  console.log('####, e', enemy);
+  showResult();
 });
