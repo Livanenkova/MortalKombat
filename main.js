@@ -44,6 +44,9 @@ const logs = {
   draw: 'Ничья - это тоже победа!'
 };
 
+const {start, end, hit, defence, draw} = logs;
+console.log(start,end,)
+
 const HIT = {
   head: 30,
   body: 25,
@@ -183,8 +186,46 @@ function PlayerAttack() {
 return attack;
 }
 
+function generateLogs (type, player1, player2, impairment) {
+  time = getTime();
+  let text;
+  let el = `<p>${text}</p>`;
+  switch(type) {
+    case 'start':
+      text = logs.start.replace('[time]',time).replace('[player1]',player1.name).replace('[player2]',player2.name);
+      el = `<p> ${text}</p>`
+    break
+    case 'end':
+      text = logs[type][createRandomNumber(logs[type].length-1)].replace('[playerWins]',player1.name).replace('[playerLose]',player2.name);
+      el = `<p>${text}</p>`
+      break
+    case 'hit':
+      text = logs[type][createRandomNumber(logs[type].length-1)].replace('[playerKick]',player1.name).replace('[playerDefence]',player2.name);
+      el = `<p>${time} ${text} - ${impairment} [${impairment}/100]</p>`
+    break
+    case 'defence':
+      text = logs[type][createRandomNumber(logs[type].length-1)].replace('[playerKick]',player2.name).replace('[playerDefence]',player1.name);
+      el = `<p>${time} ${text}</p>`
+      console.log('defence', impairment)
+    break
+    case 'draw':
+      text = logs.draw;
+      el = `<p>${text}</p>`
+      break
+  
+    default:
+      text = logs.draw;
+      el = `<p>${text}</p>`
+  }
+  
+  $chat.insertAdjacentHTML('afterbegin', el)
+
+}
+
 function showResult() {
   if (player1.hp === 0 || player2.hp === 0){
+    // generateLogs('draw', player2, player1);
+    console.log(generateLogs('draw', player2, player1));
     $randomButton.disabled = true;
     const $reloadButton = createReloadButton();
     $arenas.appendChild($reloadButton);
@@ -200,44 +241,6 @@ function showResult() {
   }
 };
 
-function generateLogs (type, player1, player2, impairment) {
-  console.log(player1)
-  console.log(player1)
-  console.log(impairment);
-  time = getTime();
-  let text;
-  let el = `<p>${text}</p>`;
-  switch(type) {
-    case 'start':
-      text = logs.start.replace('[time]',time).replace('[player1]',player1.name).replace('[player2]',player2.name);
-      el = `<p> ${text}</p>`
-      $chat.insertAdjacentHTML('afterbegin', el)
-    break
-    case 'end':
-      text = logs[type][createRandomNumber(logs[type].length-1)].replace('[playerWins]',player1.name).replace('[playerLose]',player2.name);
-      el = `<p>${text}</p>`
-      $chat.insertAdjacentHTML('afterbegin', el)
-      break
-    case 'hit':
-      text = logs[type][createRandomNumber(logs[type].length-1)].replace('[playerKick]',player1.name).replace('[playerDefence]',player2.name);
-      el = `<p>${time} ${text} ${impairment} [${impairment}/100]</p>`
-      $chat.insertAdjacentHTML('afterbegin', el)
-      console.log('hit', impairment)
-    break
-    case 'defence':
-      text = logs[type][createRandomNumber(logs[type].length-1)].replace('[playerKick]',player2.name).replace('[playerDefence]',player1.name);
-      el = `<p>${time} ${text} ${impairment} [${impairment}/100]</p>`
-      $chat.insertAdjacentHTML('afterbegin', el)
-      console.log('defence', impairment)
-    break
-  
-    default:
-      text = logs.draw;
-      el = `<p>${text}</p>`
-      $chat.insertAdjacentHTML('afterbegin', el)
-  }
-}
-
 function getTime() {
   const date = new Date;
   return date.getHours() + ':' + date.getMinutes();
@@ -248,9 +251,22 @@ $formFigth.addEventListener('submit',function(e){
   $reloadWrap.disabled = true;
   const enemy = enemyAttack();
   const attack = PlayerAttack();
+  console.log(attack);
+  console.log(enemy);
+
+  if (attack.hit === enemy.defence && attack.defence === enemy.hit) {
+    generateLogs('draw');
+    $arenas.appendChild(playerLose());
+    console.log("ничья")
+  }
   
-  if (attack.hit === enemy.defence || attack.defence === enemy.hit) {
-    generateLogs('draw', player2, player1)
+  if (attack.hit === enemy.defence) {
+    generateLogs('defence',player2,player1);
+    $arenas.appendChild(playerLose());
+  }
+
+  if (attack.defence === enemy.hit) {
+    generateLogs('defence',player2,player1);
     $arenas.appendChild(playerLose());
   }  
 
@@ -258,12 +274,14 @@ $formFigth.addEventListener('submit',function(e){
     player1.changeHP(enemy.value);
     player1.renderHP();
     generateLogs('hit',player2,player1,enemy.value);
+    console.log(player1.hp)
   }
 
   if (enemy.defence !== attack.hit) {
     player2.changeHP(attack.value);
     player2.renderHP();
-    generateLogs('defence',player1,player1,attack.value);
+    generateLogs('hit',player1,player2,enemy.value);
+    console.log(player2.hp)
   }
   showResult();
 });
