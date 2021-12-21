@@ -189,7 +189,7 @@ return attack;
 function generateLogs (type, player1, player2, impairment) {
   time = getTime();
   let text;
-  let el = `<p>${text}</p>`;
+  let el;
   switch(type) {
     case 'start':
       text = logs.start.replace('[time]',time).replace('[player1]',player1.name).replace('[player2]',player2.name);
