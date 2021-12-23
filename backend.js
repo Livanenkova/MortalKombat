@@ -1,4 +1,5 @@
-import {player1, player2,HIT, ATTACK,elHP,renderHP,changeHP} from './variable.js'
+import {player1, player2} from './player.js'
+import {HIT, ATTACK,} from './variable.js'
 import {createElement,createRandomNumber,getTime} from './utils.js'
 import {$formFigth, $randomButton,$arenas} from './main.js'
 import {logs} from './logs.js'
@@ -7,6 +8,7 @@ export const {player: player1Counter, name: player1Name, hp: player1Hp, img: pla
 export const {player: player2Counter, name: player2Name, hp: player2Hp, img: player2img} = player2;
 
 const $chat = document.querySelector('.chat');
+
 
 export function playerLose(name){
   const $winTitle = createElement('div','loseTitle');
@@ -75,7 +77,7 @@ export function showResult() {
   }
 };
 
-export function generateLogs (type, player1, player2, impairment) {
+export function generateLogs (type, impairment) {
   const time = getTime();
   let text;
   let el;

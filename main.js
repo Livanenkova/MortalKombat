@@ -1,5 +1,4 @@
-import {logs} from './logs.js'
-import {player1, player2,HIT, ATTACK,elHP,renderHP,changeHP} from './variable.js'
+import { player1, player2 } from './player.js'
 import {createElement,createRandomNumber,getTime} from './utils.js'
 import {playerLose,createReloadButton,enemyAttack,PlayerAttack,showResult,generateLogs} from './backend.js'
 
@@ -12,8 +11,8 @@ export const $formFigth = document.querySelector('.control');
 export const {player: player1Counter, name: player1Name, hp: player1Hp, img: player1img} = player1;
 export const {player: player2Counter, name: player2Name, hp: player2Hp, img: player2img} = player2;
 
-const createPlayer = function(player) {
-  const $player = createElement('div','player' + player.player);
+const createPlayer = function({player,hp,name,img}) {
+  const $player = createElement('div',`player${player}`);
   const $progressbar = createElement('div','progressbar');
   const $character = createElement('div','character');
   const $life = createElement('div','life');
@@ -28,36 +27,33 @@ const createPlayer = function(player) {
   $progressbar.appendChild($name);
   $character.appendChild($img);
 
-  $life.style.width = player.hp + '%';
-  $name.innerText = player.name;
-  $img.src = player.img;
+  $life.style.width = hp + '%';
+  $name.innerText = name;
+  $img.src = img;
   return $player
 };
-
-
-
 
 $formFigth.addEventListener('submit',function(e){
   e.preventDefault()
   $reloadWrap.disabled = true;
-  const enemy = enemyAttack();
-  const attack = PlayerAttack();
+  const {hit: hitEnemy,defence: defenceEnemy, value: valueEnemy} = enemyAttack();
+  const {hit,defence, value}  = PlayerAttack();
   
-  if (attack.hit === enemy.defence || attack.defence === enemy.hit) {
+  if (hit === defenceEnemy || defence === hitEnemy) {
     generateLogs('draw', player2, player1)
     $arenas.appendChild(playerLose());
   }  
 
-  if (attack.defence !== enemy.hit){
-    player1.changeHP(enemy.value);
+  if (defence !== hitEnemy){
+    player1.changeHP(valueEnemy);
     player1.renderHP();
-    generateLogs('hit',player2,player1,enemy.value);
+    generateLogs('hit',player2,player1,valueEnemy);
   }
 
-  if (enemy.defence !== attack.hit) {
-    player2.changeHP(attack.value);
+  if (defenceEnemy !== hit) {
+    player2.changeHP(value);
     player2.renderHP();
-    generateLogs('defence',player1,player1,attack.value);
+    generateLogs('defence',player1,player1,value);
   }
   showResult();
 });
