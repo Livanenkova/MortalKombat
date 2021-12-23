@@ -1,4 +1,9 @@
-import {changeHP, elHP,renderHP} from './backend.js'
+export const HIT = {
+  head: 30,
+  body: 25,
+  foot: 20,
+}
+export const ATTACK = ['head', 'body', 'foot'];
 
 export const  player1 = {
   player: 1,
@@ -22,12 +27,17 @@ export const  player2 = {
   renderHP,
 }
 
-export const HIT = {
-  head: 30,
-  body: 25,
-  foot: 20,
+export function elHP() {
+  return document.querySelector('.player' + this.player + ' .life');
 }
-export const ATTACK = ['head', 'body', 'foot'];
 
+export function renderHP($playerLife) {
+  return this.elHP().style.width = this.hp + '%';
+}
 
-
+export function changeHP(damage) {
+  this.hp -= damage;
+  if (this.hp < 0) {
+    this.hp = 0;
+  }
+};

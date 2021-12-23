@@ -1,18 +1,16 @@
 import {logs} from './logs.js'
+import {player1, player2,HIT, ATTACK,elHP,renderHP,changeHP} from './variable.js'
 import {createElement,createRandomNumber,getTime} from './utils.js'
-import {player1, player2,HIT, ATTACK} from './variable.js'
-import {playerLose,showResult,generateLogs,createReloadButton} from './mapping.js'
-import {enemyAttack,PlayerAttack,changeHP, elHP,renderHP} from './backend.js'
+import {playerLose,createReloadButton,enemyAttack,PlayerAttack,showResult,generateLogs} from './backend.js'
 
 export const $arenas = document.querySelector('.arenas');
 export const $randomButton = document.querySelector('.button');
-export const $reloadWrap = createElement('div','reloadWrap');
+const $reloadWrap = createElement('div','reloadWrap');
 export const $formFigth = document.querySelector('.control');
 
 
-
-const {player: player1Counter, name: player1Name, hp: player1Hp, img: player1img} = player1;
-const {player: player2Counter, name: player2Name, hp: player2Hp, img: player2img} = player2;
+export const {player: player1Counter, name: player1Name, hp: player1Hp, img: player1img} = player1;
+export const {player: player2Counter, name: player2Name, hp: player2Hp, img: player2img} = player2;
 
 const createPlayer = function(player) {
   const $player = createElement('div','player' + player.player);
@@ -36,27 +34,17 @@ const createPlayer = function(player) {
   return $player
 };
 
+
+
+
 $formFigth.addEventListener('submit',function(e){
   e.preventDefault()
   $reloadWrap.disabled = true;
   const enemy = enemyAttack();
   const attack = PlayerAttack();
-  console.log(attack);
-  console.log(enemy);
-
-  if (attack.hit === enemy.defence && attack.defence === enemy.hit) {
-    generateLogs('draw');
-    $arenas.appendChild(playerLose());
-    console.log("ничья")
-  }
   
-  if (attack.hit === enemy.defence) {
-    generateLogs('defence',player2,player1);
-    $arenas.appendChild(playerLose());
-  }
-
-  if (attack.defence === enemy.hit) {
-    generateLogs('defence',player2,player1);
+  if (attack.hit === enemy.defence || attack.defence === enemy.hit) {
+    generateLogs('draw', player2, player1)
     $arenas.appendChild(playerLose());
   }  
 
@@ -69,7 +57,7 @@ $formFigth.addEventListener('submit',function(e){
   if (enemy.defence !== attack.hit) {
     player2.changeHP(attack.value);
     player2.renderHP();
-    generateLogs('hit',player1,player2,enemy.value);
+    generateLogs('defence',player1,player1,attack.value);
   }
   showResult();
 });
