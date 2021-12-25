@@ -1,10 +1,17 @@
-import {$formFigth, $randomButton,$arenas,$reloadWrap} from './main.js'
 import { player1, player2 } from './player.js'
 import {createElement,createRandomNumber,getTime} from './utils.js'
 import {playerLose,createReloadButton,enemyAttack,PlayerAttack,showResult,generateLogs} from './backend.js'
+
+export const $arenas = document.querySelector('.arenas');
+export const $randomButton = document.querySelector('.button');
+export const $reloadWrap = createElement('div','reloadWrap');
+export const $formFigth = document.querySelector('.control');
+
+
+
 export default class Game {
   constructor(props){
-
+    
   }
 
   start() {
@@ -29,12 +36,15 @@ export default class Game {
       $img.src = img;
       return $player
     };
+
     
     $formFigth.addEventListener('submit',function(e){
       e.preventDefault()
       $reloadWrap.disabled = true;
       const {hit: hitEnemy,defence: defenceEnemy, value: valueEnemy} = enemyAttack();
       const {hit,defence, value}  = PlayerAttack();
+      console.log(valueEnemy);
+      console.log(value);
       
       if (hit === defenceEnemy || defence === hitEnemy) {
         generateLogs('draw', player2, player1)

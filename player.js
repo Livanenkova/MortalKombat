@@ -36,7 +36,3 @@ export const player2 = new Player({
   hp: 100,
   img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
 })
-
-  console.log(player1);
-  console.log(player2);
-

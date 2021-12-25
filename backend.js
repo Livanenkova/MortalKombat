@@ -1,11 +1,18 @@
-import {player1, player2} from './player.js'
 import {HIT, ATTACK,} from './variable.js'
+import {player1, player2} from './player.js'
+import {$arenas, $randomButton,$reloadWrap,} from './game.js'
 import {createElement,createRandomNumber,getTime} from './utils.js'
-import {$formFigth, $randomButton,$arenas} from './main.js'
 import {logs} from './logs.js'
+
 
 export const {player: player1Counter, name: player1Name, hp: player1Hp, img: player1img} = player1;
 export const {player: player2Counter, name: player2Name, hp: player2Hp, img: player2img} = player2;
+
+export const {hit: hitEnemy,defence: defenceEnemy, value: valueEnemy} = enemyAttack();
+export const {hit,defence, value}  = PlayerAttack();
+
+console.log(value)
+console.log(valueEnemy)
 
 const $chat = document.querySelector('.chat');
 
@@ -45,6 +52,7 @@ export function enemyAttack () {
 
 export function PlayerAttack() {
   const attack = {};
+  const $formFigth = document.querySelector('.control');
   for (let item of $formFigth){
     if (item.checked && item.name === "hit") {
       attack.value = createRandomNumber(HIT[item.value]);
@@ -67,17 +75,20 @@ export function showResult() {
     $arenas.appendChild($reloadButton);
     }  
     if (player1.hp === 0 && player1.hp < player2.hp) {
-      generateLogs('end', player2, player1)
+      generateLogs('end', player1.hp )
+      console.log(player1.hp)
       $arenas.appendChild(playerLose(player2.name));
     } else if (player2.hp === 0 && player2.hp < player1.hp) {
-      generateLogs('end', player1, player2)
+      generateLogs('end', player2.hp)
       $arenas.appendChild(playerLose(player1.name));
+      console.log(player2.hp)
     } else if ( player1.hp === 0 && player2.hp === 0) {
     $arenas.appendChild(playerLose());
   }
 };
 
 export function generateLogs (type, impairment) {
+  console.log(impairment);
   const time = getTime();
   let text;
   let el;
@@ -103,10 +114,6 @@ export function generateLogs (type, impairment) {
       text = logs.draw;
       el = `<p>${text}</p>`
       break
-  
-    default:
-      text = logs.draw;
-      el = `<p>${text}</p>`
   }
   $chat.insertAdjacentHTML('afterbegin', el)
 }

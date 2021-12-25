@@ -4,3 +4,4 @@ export const HIT = {
   foot: 20,
 }
 export const ATTACK = ['head', 'body', 'foot'];
+
