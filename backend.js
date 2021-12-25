@@ -1,28 +1,24 @@
 import {HIT, ATTACK,} from './variable.js'
-import {player1, player2} from './player.js'
-import {$arenas, $randomButton,$reloadWrap,} from './game.js'
+import {$arenas,$randomButton,$reloadWrap,player1, player2} from './game.js'
 import {createElement,createRandomNumber,getTime} from './utils.js'
 import {logs} from './logs.js'
 
-
-export const {player: player1Counter, name: player1Name, hp: player1Hp, img: player1img} = player1;
-export const {player: player2Counter, name: player2Name, hp: player2Hp, img: player2img} = player2;
+// const {player: player1Counter, name: player1Name, hp: player1Hp, img: player1img} = player1;
+// const {player: player2Counter, name: player2Name, hp: player2Hp, img: player2img} = player2;
 
 export const {hit: hitEnemy,defence: defenceEnemy, value: valueEnemy} = enemyAttack();
 export const {hit,defence, value}  = PlayerAttack();
-
-console.log(value)
-console.log(valueEnemy)
 
 const $chat = document.querySelector('.chat');
 
 
 export function playerLose(name){
   const $winTitle = createElement('div','loseTitle');
-  if (name) {
+  if (player1.hp === 0 || player2.hp === 0) {
     $winTitle.innerText = name + ' wins';
-  } else {
-    $winTitle.innerText ='Draw';
+  }
+  else if (player1.hp === 0 && player2.hp === 0) {
+    $winTitle.innerText = ' Draw';
   }
   return $winTitle;
 };
@@ -75,7 +71,7 @@ export function showResult() {
     $arenas.appendChild($reloadButton);
     }  
     if (player1.hp === 0 && player1.hp < player2.hp) {
-      generateLogs('end', player1.hp )
+      generateLogs('end', valueEnemy)
       console.log(player1.hp)
       $arenas.appendChild(playerLose(player2.name));
     } else if (player2.hp === 0 && player2.hp < player1.hp) {
@@ -83,32 +79,33 @@ export function showResult() {
       $arenas.appendChild(playerLose(player1.name));
       console.log(player2.hp)
     } else if ( player1.hp === 0 && player2.hp === 0) {
+      console.log(player1.hp)
+      console.log(player2.hp)
     $arenas.appendChild(playerLose());
   }
 };
 
-export function generateLogs (type, impairment) {
-  console.log(impairment);
+export function generateLogs(type, impairment) {
   const time = getTime();
   let text;
   let el;
   switch(type) {
     case 'start':
-      text = logs.start.replace('[time]',time).replace('[player1]',player1Name).replace('[player2]',player2Name);
+      text = logs.start.replace('[time]',time).replace('[player1]',player1.name).replace('[player2]',player2.name);
       el = `<p> ${text}</p>`
     break
     case 'end':
-      text = logs[type][createRandomNumber(logs[type].length-1)].replace('[playerWins]',player1Name).replace('[playerLose]',player2Name);
+      text = logs[type][createRandomNumber(logs[type].length-1)].replace('[playerWins]',player1.name).replace('[playerLose]',player2.name);
       el = `<p>${text}</p>`
       break
     case 'hit':
-      text = logs[type][createRandomNumber(logs[type].length-1)].replace('[playerKick]',player1Name).replace('[playerDefence]',player2Name);
-      el = `<p>${time} ${text} - ${impairment} [${impairment}/100]</p>`
+      text = logs[type][createRandomNumber(logs[type].length-1)].replace('[playerKick]',player1.name).replace('[playerDefence]',player2.name);
+      el = `<p>${time} ${text} - ${100 - impairment.hp} [${100 - impairment.hp}/100]</p>`
     break
     case 'defence':
-      text = logs[type][createRandomNumber(logs[type].length-1)].replace('[playerKick]',player2Name).replace('[playerDefence]',player1Name);
+      text = logs[type][createRandomNumber(logs[type].length-1)].replace('[playerKick]',player2.name).replace('[playerDefence]',player1.name);
       el = `<p>${time} ${text}</p>`
-      console.log('defence', impairment)
+      console.log('defence', 100 - impairment.hp)
     break
     case 'draw':
       text = logs.draw;
@@ -116,4 +113,29 @@ export function generateLogs (type, impairment) {
       break
   }
   $chat.insertAdjacentHTML('afterbegin', el)
+};
+
+export function createPlayer(player) {
+  console.log(player.name)
+  console.log(player.player)
+  console.log(player.img)
+  const $player = createElement('div',`player` + player.player);
+  const $progressbar = createElement('div','progressbar');
+  const $character = createElement('div','character');
+  const $life = createElement('div','life');
+  const $name = createElement('div','name');
+  const $img = createElement('img');
+
+  $img.classList.add('img');
+  
+  $player.appendChild($progressbar);
+  $player.appendChild($character);
+  $progressbar.appendChild($life);
+  $progressbar.appendChild($name);
+  $character.appendChild($img);
+
+  $life.style.width = player.hp + '%';
+  $name.innerText = player.name;
+  $img.src = player.img;
+  return $player
 }
