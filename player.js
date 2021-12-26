@@ -1,5 +1,3 @@
-import {createElement} from './utils.js'
-
 export class Player  {
   constructor(props){
     this.player = props.player;
