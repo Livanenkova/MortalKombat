@@ -1,5 +1,5 @@
-import {createElement,createRandomNumber,getTime} from './utils.js'
-import {playerLose,createReloadButton,enemyAttack,PlayerAttack,showResult,generateLogs,createPlayer} from './backend.js'
+import {createElement,createRandomNumber} from './utils.js'
+import {playerLose,enemyAttack,PlayerAttack,showResult,generateLogs,createPlayer} from './backend.js'
 import {Player} from './player.js'
 
 export const $arenas = document.querySelector('.arenas');

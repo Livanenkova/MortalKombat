@@ -1,5 +1,5 @@
 import {HIT, ATTACK,} from './variable.js'
-import {$arenas,$randomButton,$reloadWrap,player1, player2} from './game.js'
+import {$arenas,$randomButton,player1, player2} from './game.js'
 import {createElement,createRandomNumber,getTime} from './utils.js'
 import {logs} from './logs.js'
 
